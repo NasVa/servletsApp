@@ -1,30 +1,23 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Book {
-    private int id;
+    private Integer id;
     private String name;
     private int yearOfPublishing;
     private String locationOfPublishing;
     private int pages;
-    private ArrayList<Author> authors;
+    private List<Author> authors = new ArrayList<>();
     private Reader owner;
 
-    public Book(String name, int yearOfPublishing, String locationOfPublishing, int pages, ArrayList<Author> authors, Reader owner) {
-        this.name = name;
-        this.yearOfPublishing = yearOfPublishing;
-        this.locationOfPublishing = locationOfPublishing;
-        this.pages = pages;
-        this.authors = authors;
-        this.owner = owner;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -60,11 +53,11 @@ public class Book {
         this.pages = pages;
     }
 
-    public ArrayList<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(ArrayList<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
@@ -74,5 +67,18 @@ public class Book {
 
     public void setOwner(Reader owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return yearOfPublishing == book.yearOfPublishing && pages == book.pages && Objects.equals(id, book.id) && Objects.equals(name, book.name) && Objects.equals(locationOfPublishing, book.locationOfPublishing) && Objects.equals(authors, book.authors) && Objects.equals(owner, book.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, yearOfPublishing, locationOfPublishing, pages, authors, owner);
     }
 }
