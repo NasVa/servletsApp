@@ -4,15 +4,16 @@ import db.ConnectionManager;
 import db.impl.ConnectionManagerImpl;
 import models.Author;
 import models.Book;
-import models.Reader;
 import repository.BookRepository;
+import repository.ReaderRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class BookRepositoryImpl implements BookRepository {
     private static class InstanceHolder {
-        private static final BookRepository INSTANCE = new BookRepositoryImpl(ConnectionManagerImpl.getInstance());
+        private static final BookRepository INSTANCE = new BookRepositoryImpl(ConnectionManagerImpl.getInstance(),
+                ReaderRepositoryImpl.getInstance());
     }
 
     private static final String CREATE_BOOK = "INSERT INTO books (name, yearOfPublishing, locationOfPublishing, pages, owner_id) VALUES (?, ?, ?, ?, ?)";
@@ -28,13 +29,11 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     private final ConnectionManager connectionManager;
+    private final ReaderRepository readerRepository;
 
-    public BookRepositoryImpl(ConnectionManager connectionManager) {
+    public BookRepositoryImpl(ConnectionManager connectionManager, ReaderRepository readerRepository) {
         this.connectionManager = connectionManager;
-    }
-
-    private Reader getBookOwner(int id){
-        return ReaderRepositoryImpl.getInstance().getById(id);
+        this.readerRepository = readerRepository;
     }
 
     private ArrayList<Author> getBookAuthors(int bookId){
@@ -53,7 +52,7 @@ public class BookRepositoryImpl implements BookRepository {
         }
     }
     @Override
-    public Book getById(int id) {
+    public Book getById(Integer id) {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(GET_BOOK_BY_ID)) {
             ps.setInt(1, id);
@@ -61,7 +60,7 @@ public class BookRepositoryImpl implements BookRepository {
             ResultSet resultSet = ps.getResultSet();
             if (resultSet.next()) {
                 Book book = toEntity(resultSet);
-                book.setOwner(getBookOwner(resultSet.getInt(6)));
+                book.setOwner(readerRepository.getById(resultSet.getInt(6)));
                 book.setAuthors(getBookAuthors(book.getId()));
                 return book;
             } else {

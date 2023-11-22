@@ -15,6 +15,14 @@ public class ConnectionManagerImpl implements ConnectionManager {
         try {
             Properties prop = new Properties();
             prop.load(ConnectionManager.class.getClassLoader().getResourceAsStream("datasource.properties"));
+            for (Object key : prop.keySet()) {
+                if (key instanceof String stringKey) {
+                    String envValue = System.getenv(stringKey.toUpperCase());
+                    if (envValue != null) {
+                        prop.setProperty(stringKey, envValue);
+                    }
+                }
+            }
             HikariConfig config = new HikariConfig(prop);
             ds = new HikariDataSource(config);
         } catch (IOException e) {

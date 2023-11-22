@@ -6,7 +6,6 @@ import models.Reader;
 import repository.ReaderRepository;
 
 import java.sql.*;
-import java.util.function.Function;
 
 public class ReaderRepositoryImpl implements ReaderRepository {
     private static class InstanceHolder {
@@ -29,7 +28,7 @@ public class ReaderRepositoryImpl implements ReaderRepository {
     }
 
     @Override
-    public Reader getById(int id) {
+    public Reader getById(Integer id) {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement ps = connection.prepareStatement(GET_READER_BY_ID)) {
             ps.setInt(1, id);

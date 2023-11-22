@@ -6,23 +6,24 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 import repository.AuthorRepository;
 import repository.BookRepository;
 import repository.ReaderRepository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BookRepositoryImplTest {
 
     private static final PostgreSQLContainer<?> postgreSQLContainer
             = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("postgres").withUsername("username").withPassword("password")
-            .withInitScript("test-schema.sql");
-    BookRepository bookRepository = new BookRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
+            .withInitScript("schema.sql");
+    ReaderRepository readerRepository = new ReaderRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
+    BookRepository bookRepository = new BookRepositoryImpl(() -> postgreSQLContainer.createConnection(""), readerRepository);
     AuthorRepository authorRepository = new AuthorRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
 
     @BeforeAll

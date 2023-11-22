@@ -1,0 +1,21 @@
+version: '3.4'
+services:
+  servletsApp:
+    image: servlets-app
+    environment:
+      - JDBCURL=jdbc:postgresql://postgresql:5432/postgres
+    build:
+      context: ../
+      dockerfile: docker/app/dockerfile
+    ports:
+      - "8080:8080"
+  postgresql:
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    image: servlets-postgres
+    build:
+      context: ../
+      dockerfile: docker/db/dockerfile
+    expose:
+      - 5432

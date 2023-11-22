@@ -12,16 +12,15 @@ import repository.ReaderRepository;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AuthorRepositoryImplTest {
 
     private static final PostgreSQLContainer<?> postgreSQLContainer
             = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("postgres").withUsername("username").withPassword("password")
-            .withInitScript("test-schema.sql");
+            .withInitScript("schema.sql");
     AuthorRepository authorRepository = new AuthorRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
-    BookRepository bookRepository = new BookRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
+    ReaderRepository readerRepository = new ReaderRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
+    BookRepository bookRepository = new BookRepositoryImpl(() -> postgreSQLContainer.createConnection(""), readerRepository);
 
     @BeforeAll
     public static void setup() {

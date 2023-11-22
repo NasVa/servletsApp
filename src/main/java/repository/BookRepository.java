@@ -3,7 +3,7 @@ package repository;
 import models.Book;
 
 public interface BookRepository {
-    Book getById(int id);
+    Book getById(Integer id);
 
     void save(Book book);
 

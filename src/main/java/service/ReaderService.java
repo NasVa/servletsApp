@@ -1,5 +1,13 @@
 package service;
 
+import dto.ReaderDto;
+
 public interface ReaderService {
-    void createReader(String name, String mail, int phone);
+    ReaderDto create(ReaderDto readerDto);
+
+    int delete(int id);
+
+    ReaderDto update(ReaderDto readerDto);
+
+    ReaderDto getById(int id);
 }

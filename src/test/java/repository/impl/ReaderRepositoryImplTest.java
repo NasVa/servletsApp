@@ -12,7 +12,7 @@ class ReaderRepositoryImplTest {
     private static final PostgreSQLContainer<?> postgreSQLContainer
             = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("postgres").withUsername("username").withPassword("password")
-            .withInitScript("test-schema.sql");
+            .withInitScript("schema.sql");
     ReaderRepository readerRepository = new ReaderRepositoryImpl(() -> postgreSQLContainer.createConnection(""));
 
     @BeforeAll
